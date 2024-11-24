@@ -1,0 +1,71 @@
+#Importing necessary modules
+import os
+import time
+import datetime
+
+#Consts
+path = r'INSERT DIRECTORY HERE\\' #Don't forget double backslash at end of file path
+x = 0 
+
+#ctime_seconds = time.ctime(creation_time)
+
+today = datetime.date.today().strftime('%d-%m-%Y') #Get todays date and convert to string
+today_converted = time.strptime(today, "%d-%m-%Y") #Parse string for easier comparison
+
+list_subdirs = [f.path for f in os.scandir(path) if f.is_dir()] #List all directories present in specified path
+list_subdir_name = [f.name for f in os.scandir(path) if f.is_dir()]
+
+#print(list_subdir_name)
+
+for dir in list_subdirs:
+
+    creation_time = os.path.getctime(list_subdirs[x])
+    converted_date = datetime.datetime.fromtimestamp(creation_time).strftime('%d-%m-%Y')
+    second_date = time.strptime(converted_date, "%d-%m-%Y")
+    #print(abs(second_date.tm_mday - today_converted.tm_mday) == 14)
+
+    if second_date.tm_year == today_converted.tm_year:
+        #Current year is the same
+        if second_date.tm_mon == today_converted.tm_mon:
+            #Current month is the same
+            pass
+        elif second_date.tm_mon != today_converted.tm_mon or abs(second_date.tm_mday - today_converted.tm_mday) >= 14:
+            print("Folder",list_subdir_name[x],"is not in the same month as today")
+            #Folder is not in same month and 14 days older than todays date
+            print("Folder", list_subdir_name[x],"is older than 14 days")
+            
+        elif second_date.tm_year < today_converted.tm_year:
+            #Folder year is older than current year
+            print("Folder", list_subdir_name[x], "is older than current year")
+
+
+    '''Left at trying to figure out the logic for calculating the year, month and day mutual exclusivity'''
+
+    #Commented out as developing new & better conditional checks
+    '''# if second_date.tm_year == today_converted.tm_year:
+    #     #Folder is in current year
+    #     print("folder is in current year")
+    # elif second_date.tm_year < today_converted.tm_year:
+    #     #Folder is older than current year
+    #     pass
+    # elif second_date.tm_mon != today_converted.tm_mon:
+    #     #Folder is in same month as todays month
+    #     print("Folder is in the current month")
+    #     if second_date.tm_mday < today_converted.tm_mday:
+    #         #Folder is older than todays day
+    #         print("Folder is older than todays day")
+    #     else:
+    #         #Folder is not older than todays day
+    #         print("Folder is not older than today")
+
+    #Initial testing
+    # if today_converted.tm_yday - second_date.tm_yday > 15: #Check if date is older than 15 days
+    #     print("Folder",list_subdir_name[x],"is older than 15 days")
+    # else:
+    #     print("Folder",list_subdir_name[x],"is not older than 15 days")
+    # #print(dir)'''
+    x+=1
+
+#print(list_subdirs[0])
+#print(creation_time)
+#print(second_date)
